@@ -1,112 +1,142 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Collapsible } from '@/components/ui/collapsible';
-import { ExternalLink } from '@/components/external-link';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Fonts } from '@/constants/theme';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 
-export default function TabTwoScreen() {
+const GUIDE_SECTIONS = [
+  {
+    title: 'Tuning Basics',
+    items: [
+      'Always tune in a star pattern: tighten opposite lugs in sequence.',
+      'Tap near each lug — all should ring at the same pitch.',
+      'Bring the head to pitch gradually; avoid over-tightening one spot.',
+      'New heads need time to seat; re-tune after the first few uses.',
+      'Back off all tension rods to finger-tight before starting.',
+    ],
+  },
+  {
+    title: 'Batter vs Resonant Heads',
+    items: [
+      'The batter head is what you strike; the reso sits on the bottom.',
+      'Both heads interact — the reso controls sustain and tone character.',
+      'A higher reso than batter gives a warmer, more focused tone.',
+      'For toms, tune the reso a 3rd or 5th higher than the batter.',
+      'Matching both heads gives maximum sustain and open tone.',
+    ],
+  },
+  {
+    title: 'Tom Cascade',
+    items: [
+      'Toms should descend in pitch from small to large (10" → 12" → floor).',
+      'A perfect 5th interval between adjacent toms sounds musical.',
+      'Consistent intervals make fills flow naturally from drum to drum.',
+      '10" target: G3 · 12" target: D3 · Floor target: A2.',
+      'Tune all toms before comparing — a slightly off drum stands out.',
+    ],
+  },
+  {
+    title: 'Snare Drum',
+    items: [
+      'Batter head at D4 gives a classic punchy rock crack.',
+      'Resonant head slightly higher improves snare wire response.',
+      'Too-tight snare wires produce a choked, metallic sound.',
+      'Loosening one lug slightly on the batter gives a "fat" tuning.',
+      'Snare side (reso) heads are thin and tension up quickly — go slow.',
+    ],
+  },
+  {
+    title: 'Bass Drum',
+    items: [
+      'Bass drum tuning is more about feel and style than a specific note.',
+      'Tighter batter head = more attack, click, and definition.',
+      'Looser batter head = more low-end boom and sustain.',
+      'Foam or pillow muffling inside controls ring for studio tones.',
+      'A small hole in the reso head allows mic placement and tone control.',
+    ],
+  },
+  {
+    title: 'Common Problems',
+    items: [
+      '"Wah" or wavering pitch: one lug is slightly out from the others.',
+      'Dead / choked sound: head is too tight or has a crease/dent.',
+      'Excessive ring: tune higher, or use light dampening (moon gel, tape).',
+      'No sustain: head is over-tightened, or snare wires are too tight.',
+      'Sympathetic ringing: nearby drum resonating when you hit another.',
+    ],
+  },
+];
+
+export default function GuideScreen() {
+  const insets = useSafeAreaInsets();
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText
-          type="title"
-          style={{
-            fontFamily: Fonts.rounded,
-          }}>
-          Explore
-        </ThemedText>
+    <ThemedView style={styles.container}>
+      <ThemedView style={[styles.header, { paddingTop: insets.top + 16 }]}>
+        <ThemedText type="title">Tuning Guide</ThemedText>
+        <ThemedText style={styles.subtitle}>Everything you need to dial in your kit</ThemedText>
       </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image
-          source={require('@/assets/images/react-logo.png')}
-          style={{ width: 100, height: 100, alignSelf: 'center' }}
-        />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{' '}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
-            react-native-reanimated
-          </ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+      <ScrollView
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 16 }]}
+        showsVerticalScrollIndicator={false}>
+        {GUIDE_SECTIONS.map((section) => (
+          <Collapsible key={section.title} title={section.title}>
+            {section.items.map((item, index) => (
+              <View key={index} style={styles.tipRow}>
+                <View
+                  style={[
+                    styles.bullet,
+                    { backgroundColor: isDark ? '#9BA1A6' : '#687076' },
+                  ]}
+                />
+                <ThemedText style={styles.tipText}>{item}</ThemedText>
+              </View>
+            ))}
+          </Collapsible>
+        ))}
+      </ScrollView>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: {
+    flex: 1,
   },
-  titleContainer: {
+  header: {
+    paddingHorizontal: 20,
+    paddingBottom: 16,
+  },
+  subtitle: {
+    marginTop: 4,
+    opacity: 0.6,
+    fontSize: 14,
+  },
+  scrollContent: {
+    padding: 16,
+    gap: 4,
+  },
+  tipRow: {
     flexDirection: 'row',
+    alignItems: 'flex-start',
     gap: 8,
+    marginBottom: 10,
+  },
+  bullet: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    marginTop: 8,
+    flexShrink: 0,
+  },
+  tipText: {
+    flex: 1,
+    fontSize: 15,
+    lineHeight: 22,
   },
 });
+

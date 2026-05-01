@@ -1,6 +1,9 @@
 # Dependencies
 node_modules/
 
+# AI Agents
+.claude/
+
 # Expo
 .expo/
 dist/

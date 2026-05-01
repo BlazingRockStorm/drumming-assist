@@ -1,98 +1,183 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { router } from 'expo-router';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import { DRUMS } from '@/constants/drums';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 
-export default function HomeScreen() {
+export default function KitScreen() {
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+  const insets = useSafeAreaInsets();
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
+    <ThemedView style={styles.container}>
+      <ThemedView style={[styles.header, { paddingTop: insets.top + 16 }]}>
+        <ThemedText type="title">My Drum Kit</ThemedText>
+        <ThemedText style={styles.subtitle}>Tap a drum to see tuning details</ThemedText>
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+      <ScrollView
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 16 }]}
+        showsVerticalScrollIndicator={false}>
+        {DRUMS.map((drum) => (
+          <TouchableOpacity
+            key={drum.id}
+            style={[
+              styles.card,
+              {
+                borderLeftColor: drum.color,
+                backgroundColor: isDark ? '#1e1e1e' : '#f8f9fa',
+              },
+            ]}
+            onPress={() => router.push(`/drum/${drum.id}` as never)}
+            activeOpacity={0.7}>
+            <View style={[styles.colorDot, { backgroundColor: drum.color }]} />
+            <View style={styles.cardContent}>
+              <View style={styles.cardHeader}>
+                <ThemedText style={styles.drumName}>{drum.name}</ThemedText>
+                <View style={[styles.sizeTag, { backgroundColor: drum.color + '25' }]}>
+                  <ThemedText style={[styles.drumSize, { color: drum.color }]}>
+                    {drum.size}
+                  </ThemedText>
+                </View>
+              </View>
+              <View style={styles.notesRow}>
+                <NoteChip
+                  label="Batter"
+                  note={drum.batter.target.note}
+                  hz={drum.batter.target.frequency}
+                  color={drum.color}
+                />
+                {drum.resonant && (
+                  <>
+                    <ThemedText style={styles.arrow}>→</ThemedText>
+                    <NoteChip
+                      label="Resonant"
+                      note={drum.resonant.target.note}
+                      hz={drum.resonant.target.frequency}
+                      color={drum.color}
+                    />
+                  </>
+                )}
+              </View>
+            </View>
+            <ThemedText style={styles.chevron}>›</ThemedText>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    </ThemedView>
+  );
+}
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+function NoteChip({
+  label,
+  note,
+  hz,
+  color,
+}: {
+  label: string;
+  note: string;
+  hz: number;
+  color: string;
+}) {
+  return (
+    <View style={styles.noteChip}>
+      <ThemedText style={styles.noteLabel}>{label}</ThemedText>
+      <ThemedText style={[styles.noteValue, { color }]}>{note}</ThemedText>
+      <ThemedText style={styles.noteHz}>{hz} Hz</ThemedText>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+  },
+  header: {
+    paddingHorizontal: 20,
+    paddingBottom: 16,
+  },
+  subtitle: {
+    marginTop: 4,
+    opacity: 0.6,
+    fontSize: 14,
+  },
+  scrollContent: {
+    padding: 16,
+    gap: 12,
+  },
+  card: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    borderRadius: 14,
+    borderLeftWidth: 4,
+    padding: 16,
+    gap: 14,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  colorDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  cardContent: {
+    flex: 1,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  drumName: {
+    fontSize: 17,
+    fontWeight: '600',
+  },
+  sizeTag: {
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 8,
+  },
+  drumSize: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  notesRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  noteChip: {
+    alignItems: 'center',
+  },
+  noteLabel: {
+    fontSize: 10,
+    opacity: 0.5,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  noteValue: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    lineHeight: 24,
+  },
+  noteHz: {
+    fontSize: 11,
+    opacity: 0.5,
+  },
+  arrow: {
+    opacity: 0.3,
+    fontSize: 18,
+    marginTop: 10,
+  },
+  chevron: {
+    fontSize: 26,
+    opacity: 0.25,
   },
 });
