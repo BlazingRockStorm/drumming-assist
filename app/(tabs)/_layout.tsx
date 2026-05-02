@@ -1,35 +1,21 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
 
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { CustomTabBar } from '@/components/custom-tab-bar';
+import { Palette } from '@/constants/theme';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
+      tabBar={(props) => <CustomTabBar {...props} />}
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-        tabBarButton: HapticTab,
+        sceneStyle: { backgroundColor: Palette.bgPrimary },
       }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Kit',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="music.note" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Guide',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="book.fill" color={color} />,
-        }}
-      />
+      <Tabs.Screen name="index" options={{ title: 'Kit' }} />
+      <Tabs.Screen name="explore" options={{ title: 'Tune' }} />
+      <Tabs.Screen name="presets" options={{ title: 'Presets' }} />
+      <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
     </Tabs>
   );
 }

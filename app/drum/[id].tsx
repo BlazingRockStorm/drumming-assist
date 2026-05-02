@@ -4,14 +4,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { Palette } from '@/constants/theme';
 import { DRUMS, type DrumHeadTuning } from '@/constants/drums';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export default function DrumDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const drum = DRUMS.find((d) => d.id === id);
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
   const insets = useSafeAreaInsets();
 
   if (!drum) {
@@ -24,12 +22,17 @@ export default function DrumDetailScreen() {
 
   return (
     <>
-      <Stack.Screen options={{ title: drum.name, headerTintColor: drum.color }} />
+      <Stack.Screen
+        options={{
+          title: drum.name,
+          headerTintColor: drum.color,
+          headerStyle: { backgroundColor: Palette.bgPrimary },
+        }}
+      />
       <ScrollView
         style={styles.container}
         contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 24 }]}
         showsVerticalScrollIndicator={false}>
-        {/* Hero */}
         <View style={[styles.hero, { backgroundColor: drum.color + '18' }]}>
           <View style={[styles.drumCircle, { backgroundColor: drum.color }]}>
             <ThemedText style={styles.circleSize}>{drum.size}</ThemedText>
@@ -40,21 +43,13 @@ export default function DrumDetailScreen() {
           </View>
         </View>
 
-        {/* Batter Head */}
-        <HeadCard title="Batter Head" tuning={drum.batter} color={drum.color} isDark={isDark} />
+        <HeadCard title="Batter Head" tuning={drum.batter} color={drum.color} />
 
-        {/* Resonant Head */}
         {drum.resonant && (
-          <HeadCard
-            title="Resonant Head"
-            tuning={drum.resonant}
-            color={drum.color}
-            isDark={isDark}
-          />
+          <HeadCard title="Resonant Head" tuning={drum.resonant} color={drum.color} />
         )}
 
-        {/* Tuning Tips */}
-        <View style={[styles.tipsCard, { backgroundColor: isDark ? '#1e1e1e' : '#f8f9fa' }]}>
+        <View style={styles.tipsCard}>
           <ThemedText style={styles.cardLabel}>Tuning Tips</ThemedText>
           {drum.tips.map((tip, i) => (
             <View key={i} style={styles.tipRow}>
@@ -72,29 +67,25 @@ function HeadCard({
   title,
   tuning,
   color,
-  isDark,
 }: {
   title: string;
   tuning: DrumHeadTuning;
   color: string;
-  isDark: boolean;
 }) {
   return (
-    <View style={[styles.headCard, { backgroundColor: isDark ? '#1e1e1e' : '#f8f9fa' }]}>
+    <View style={styles.headCard}>
       <ThemedText style={styles.cardLabel}>{title}</ThemedText>
       <View style={styles.headRow}>
-        {/* Target Note */}
         <View
           style={[
             styles.targetBox,
-            { backgroundColor: color + '18', borderColor: color + '50', borderWidth: 1 },
+            { backgroundColor: color + '18', borderColor: color + '50' },
           ]}>
           <ThemedText style={styles.targetLabel}>Target</ThemedText>
           <ThemedText style={[styles.targetNote, { color }]}>{tuning.target.note}</ThemedText>
           <ThemedText style={styles.targetHz}>{tuning.target.frequency} Hz</ThemedText>
         </View>
 
-        {/* Range */}
         <View style={styles.rangeBox}>
           <View style={styles.rangeBound}>
             <ThemedText style={styles.rangeDir}>Low</ThemedText>
@@ -119,6 +110,7 @@ function HeadCard({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: Palette.bgPrimary,
   },
   content: {
     padding: 16,
@@ -142,32 +134,31 @@ const styles = StyleSheet.create({
   circleSize: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '700',
   },
-  heroText: {
-    flex: 1,
-  },
+  heroText: { flex: 1 },
   heroTitle: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontWeight: '700',
     marginBottom: 4,
   },
   heroDesc: {
     fontSize: 14,
     lineHeight: 20,
-    opacity: 0.7,
+    color: Palette.textSecondary,
   },
   headCard: {
     borderRadius: 14,
     padding: 16,
     gap: 14,
+    backgroundColor: Palette.bgSurface,
   },
   cardLabel: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '700',
     textTransform: 'uppercase',
     letterSpacing: 0.8,
-    opacity: 0.5,
+    color: Palette.textTertiary,
     marginBottom: 2,
   },
   headRow: {
@@ -180,23 +171,24 @@ const styles = StyleSheet.create({
     padding: 14,
     alignItems: 'center',
     minWidth: 96,
+    borderWidth: 1,
   },
   targetLabel: {
     fontSize: 10,
     fontWeight: '600',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
-    opacity: 0.6,
+    color: Palette.textSecondary,
     marginBottom: 2,
   },
   targetNote: {
-    fontSize: 34,
-    fontWeight: 'bold',
-    lineHeight: 40,
+    fontSize: 32,
+    fontWeight: '700',
+    lineHeight: 38,
   },
   targetHz: {
     fontSize: 12,
-    opacity: 0.6,
+    color: Palette.textTertiary,
     marginTop: 2,
   },
   rangeBox: {
@@ -210,19 +202,20 @@ const styles = StyleSheet.create({
   },
   rangeDir: {
     fontSize: 11,
-    opacity: 0.4,
+    color: Palette.textTertiary,
     width: 30,
     textTransform: 'uppercase',
     letterSpacing: 0.4,
   },
   rangeNote: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '600',
+    color: Palette.textPrimary,
     width: 38,
   },
   rangeHz: {
     fontSize: 12,
-    opacity: 0.5,
+    color: Palette.textTertiary,
   },
   rangeTrack: {
     height: 6,
@@ -230,6 +223,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     justifyContent: 'center',
     marginVertical: 2,
+    backgroundColor: Palette.bgCard,
   },
   rangeTrackFill: {
     position: 'absolute',
@@ -251,6 +245,7 @@ const styles = StyleSheet.create({
   tipsCard: {
     borderRadius: 14,
     padding: 16,
+    backgroundColor: Palette.bgSurface,
   },
   tipRow: {
     flexDirection: 'row',
@@ -267,7 +262,8 @@ const styles = StyleSheet.create({
   },
   tipText: {
     flex: 1,
-    fontSize: 15,
-    lineHeight: 22,
+    fontSize: 14,
+    lineHeight: 20,
+    color: Palette.textSecondary,
   },
 });

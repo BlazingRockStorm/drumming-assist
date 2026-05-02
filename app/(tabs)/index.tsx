@@ -1,77 +1,92 @@
+import Feather from '@expo/vector-icons/Feather';
 import { router } from 'expo-router';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { KitVisualization } from '@/components/kit-visualization';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { DRUMS } from '@/constants/drums';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { Palette } from '@/constants/theme';
+import { DRUMS, type Drum } from '@/constants/drums';
+
+const TAB_BAR_SPACE = 100;
 
 export default function KitScreen() {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
   const insets = useSafeAreaInsets();
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedView style={[styles.header, { paddingTop: insets.top + 16 }]}>
-        <ThemedText type="title">My Drum Kit</ThemedText>
-        <ThemedText style={styles.subtitle}>Tap a drum to see tuning details</ThemedText>
-      </ThemedView>
       <ScrollView
-        contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 16 }]}
+        contentContainerStyle={[
+          styles.scrollContent,
+          {
+            paddingTop: insets.top + 8,
+            paddingBottom: insets.bottom + TAB_BAR_SPACE,
+          },
+        ]}
         showsVerticalScrollIndicator={false}>
-        {DRUMS.map((drum) => (
-          <TouchableOpacity
-            key={drum.id}
-            style={[
-              styles.card,
-              {
-                borderLeftColor: drum.color,
-                backgroundColor: isDark ? '#1e1e1e' : '#f8f9fa',
-              },
-            ]}
-            onPress={() => router.push(`/drum/${drum.id}` as never)}
-            activeOpacity={0.7}>
-            <View style={[styles.colorDot, { backgroundColor: drum.color }]} />
-            <View style={styles.cardContent}>
-              <View style={styles.cardHeader}>
-                <ThemedText style={styles.drumName}>{drum.name}</ThemedText>
-                <View style={[styles.sizeTag, { backgroundColor: drum.color + '25' }]}>
-                  <ThemedText style={[styles.drumSize, { color: drum.color }]}>
-                    {drum.size}
-                  </ThemedText>
-                </View>
-              </View>
-              <View style={styles.notesRow}>
-                <NoteChip
-                  label="Batter"
-                  note={drum.batter.target.note}
-                  hz={drum.batter.target.frequency}
-                  color={drum.color}
-                />
-                {drum.resonant && (
-                  <>
-                    <ThemedText style={styles.arrow}>→</ThemedText>
-                    <NoteChip
-                      label="Resonant"
-                      note={drum.resonant.target.note}
-                      hz={drum.resonant.target.frequency}
-                      color={drum.color}
-                    />
-                  </>
-                )}
-              </View>
-            </View>
-            <ThemedText style={styles.chevron}>›</ThemedText>
+        <View style={styles.header}>
+          <View style={styles.headerLeft}>
+            <ThemedText type="title">My Drum Kit</ThemedText>
+            <ThemedText style={styles.subtitle}>Standard Rock Tuning</ThemedText>
+          </View>
+          <TouchableOpacity style={styles.iconBtn} activeOpacity={0.7}>
+            <Feather name="settings" size={20} color={Palette.textSecondary} />
           </TouchableOpacity>
-        ))}
+        </View>
+
+        <KitVisualization />
+
+        <View style={styles.listHeader}>
+          <ThemedText style={styles.listTitle}>Drums</ThemedText>
+          <ThemedText style={styles.listCount}>{DRUMS.length} drums</ThemedText>
+        </View>
+
+        <View style={styles.list}>
+          {DRUMS.map((drum) => (
+            <DrumCard key={drum.id} drum={drum} />
+          ))}
+        </View>
       </ScrollView>
     </ThemedView>
   );
 }
 
-function NoteChip({
+function DrumCard({ drum }: { drum: Drum }) {
+  return (
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() => router.push(`/drum/${drum.id}` as never)}
+      activeOpacity={0.75}>
+      <View style={[styles.colorBar, { backgroundColor: drum.color }]} />
+      <View style={styles.cardBody}>
+        <View style={styles.cardTopRow}>
+          <ThemedText style={styles.drumName}>{drum.name}</ThemedText>
+          <ThemedText style={styles.drumSize}>{drum.size}</ThemedText>
+        </View>
+        <View style={styles.cardBottomRow}>
+          <NoteLine
+            label="Batter"
+            note={drum.batter.target.note}
+            hz={drum.batter.target.frequency}
+            color={drum.color}
+          />
+          {drum.resonant && (
+            <NoteLine
+              label="Reso"
+              note={drum.resonant.target.note}
+              hz={drum.resonant.target.frequency}
+              color={drum.color}
+            />
+          )}
+        </View>
+      </View>
+      <Feather name="chevron-right" size={18} color={Palette.textTertiary} />
+    </TouchableOpacity>
+  );
+}
+
+function NoteLine({
   label,
   note,
   hz,
@@ -83,101 +98,106 @@ function NoteChip({
   color: string;
 }) {
   return (
-    <View style={styles.noteChip}>
+    <View style={styles.noteLine}>
+      <Feather name="play" size={9} color={color} style={styles.noteIcon} />
       <ThemedText style={styles.noteLabel}>{label}</ThemedText>
-      <ThemedText style={[styles.noteValue, { color }]}>{note}</ThemedText>
-      <ThemedText style={styles.noteHz}>{hz} Hz</ThemedText>
+      <ThemedText style={styles.noteValue}>{note}</ThemedText>
+      <ThemedText style={styles.noteHz}>· {hz} Hz</ThemedText>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  container: { flex: 1 },
+  scrollContent: {
+    paddingHorizontal: 20,
+    gap: 24,
   },
   header: {
-    paddingHorizontal: 20,
-    paddingBottom: 16,
-  },
-  subtitle: {
-    marginTop: 4,
-    opacity: 0.6,
-    fontSize: 14,
-  },
-  scrollContent: {
-    padding: 16,
-    gap: 12,
-  },
-  card: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 14,
-    borderLeftWidth: 4,
-    padding: 16,
-    gap: 14,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  colorDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-  },
-  cardContent: {
-    flex: 1,
-  },
-  cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 10,
   },
-  drumName: {
-    fontSize: 17,
+  headerLeft: { gap: 4, flex: 1 },
+  subtitle: {
+    color: Palette.textSecondary,
+    fontSize: 14,
+  },
+  iconBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: Palette.bgCard,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  listHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  listTitle: {
+    fontSize: 18,
     fontWeight: '600',
+    color: Palette.textPrimary,
   },
-  sizeTag: {
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 8,
-  },
-  drumSize: {
+  listCount: {
     fontSize: 13,
-    fontWeight: '600',
+    color: Palette.textTertiary,
   },
-  notesRow: {
+  list: { gap: 10 },
+  card: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 14,
+    backgroundColor: Palette.bgSurface,
+    borderRadius: 14,
+    padding: 16,
   },
-  noteChip: {
+  colorBar: {
+    width: 4,
+    alignSelf: 'stretch',
+    borderRadius: 2,
+  },
+  cardBody: { flex: 1, gap: 8 },
+  cardTopRow: {
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 8,
   },
+  drumName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: Palette.textPrimary,
+    flexShrink: 1,
+  },
+  drumSize: {
+    fontSize: 12,
+    color: Palette.textTertiary,
+  },
+  cardBottomRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 14,
+  },
+  noteLine: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  noteIcon: { marginRight: 2 },
   noteLabel: {
-    fontSize: 10,
-    opacity: 0.5,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    fontSize: 12,
+    color: Palette.textSecondary,
   },
   noteValue: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    lineHeight: 24,
+    fontSize: 12,
+    fontWeight: '600',
+    color: Palette.textPrimary,
   },
   noteHz: {
-    fontSize: 11,
-    opacity: 0.5,
-  },
-  arrow: {
-    opacity: 0.3,
-    fontSize: 18,
-    marginTop: 10,
-  },
-  chevron: {
-    fontSize: 26,
-    opacity: 0.25,
+    fontSize: 12,
+    color: Palette.textTertiary,
   },
 });

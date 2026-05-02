@@ -4,7 +4,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Collapsible } from '@/components/ui/collapsible';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { Palette } from '@/constants/theme';
+
+const TAB_BAR_SPACE = 100;
 
 const GUIDE_SECTIONS = [
   {
@@ -71,72 +73,69 @@ const GUIDE_SECTIONS = [
 
 export default function GuideScreen() {
   const insets = useSafeAreaInsets();
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedView style={[styles.header, { paddingTop: insets.top + 16 }]}>
-        <ThemedText type="title">Tuning Guide</ThemedText>
-        <ThemedText style={styles.subtitle}>Everything you need to dial in your kit</ThemedText>
-      </ThemedView>
       <ScrollView
-        contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 16 }]}
+        contentContainerStyle={[
+          styles.scrollContent,
+          {
+            paddingTop: insets.top + 8,
+            paddingBottom: insets.bottom + TAB_BAR_SPACE,
+          },
+        ]}
         showsVerticalScrollIndicator={false}>
-        {GUIDE_SECTIONS.map((section) => (
-          <Collapsible key={section.title} title={section.title}>
-            {section.items.map((item, index) => (
-              <View key={index} style={styles.tipRow}>
-                <View
-                  style={[
-                    styles.bullet,
-                    { backgroundColor: isDark ? '#9BA1A6' : '#687076' },
-                  ]}
-                />
-                <ThemedText style={styles.tipText}>{item}</ThemedText>
-              </View>
-            ))}
-          </Collapsible>
-        ))}
+        <View style={styles.header}>
+          <ThemedText type="title">Tuning Guide</ThemedText>
+          <ThemedText style={styles.subtitle}>Everything you need to dial in your kit</ThemedText>
+        </View>
+        <View style={styles.list}>
+          {GUIDE_SECTIONS.map((section) => (
+            <Collapsible key={section.title} title={section.title}>
+              {section.items.map((item, index) => (
+                <View key={index} style={styles.tipRow}>
+                  <View style={styles.bullet} />
+                  <ThemedText style={styles.tipText}>{item}</ThemedText>
+                </View>
+              ))}
+            </Collapsible>
+          ))}
+        </View>
       </ScrollView>
     </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
+  container: { flex: 1 },
+  scrollContent: {
     paddingHorizontal: 20,
-    paddingBottom: 16,
+    gap: 16,
   },
+  header: { gap: 4 },
   subtitle: {
-    marginTop: 4,
-    opacity: 0.6,
+    color: Palette.textSecondary,
     fontSize: 14,
   },
-  scrollContent: {
-    padding: 16,
-    gap: 4,
-  },
+  list: { gap: 10 },
   tipRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: 8,
-    marginBottom: 10,
+    gap: 10,
+    paddingVertical: 4,
   },
   bullet: {
     width: 6,
     height: 6,
     borderRadius: 3,
+    backgroundColor: Palette.accent,
     marginTop: 8,
     flexShrink: 0,
   },
   tipText: {
     flex: 1,
-    fontSize: 15,
-    lineHeight: 22,
+    fontSize: 14,
+    lineHeight: 20,
+    color: Palette.textSecondary,
   },
 });
-
