@@ -1,6 +1,5 @@
 import { DarkTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
@@ -27,14 +26,9 @@ const navTheme = {
 
 const SPLASH_MS = 1400;
 
-SplashScreen.preventAutoHideAsync().catch(() => {});
-
 export default function RootLayout() {
   const [phase, setPhase] = useState<'splash' | 'loading' | 'ready'>('splash');
 
-  useEffect(() => {
-    SplashScreen.hideAsync().catch(() => {});
-  }, []);
 
   useEffect(() => {
     if (phase !== 'splash') return;

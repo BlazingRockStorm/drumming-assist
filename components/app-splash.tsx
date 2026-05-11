@@ -4,7 +4,7 @@ import { Palette } from '@/constants/theme';
 import { ThemedText } from '@/components/themed-text';
 
 // Replace this PNG with your final drum artwork. Recommended ~600×600, transparent bg.
-const DRUM_IMAGE = require('../assets/images/drum.png');
+const DRUM_IMAGE = require('../assets/images/splash-icon.png');
 
 export function AppSplash() {
   return (
@@ -12,7 +12,7 @@ export function AppSplash() {
       <View style={styles.glow} pointerEvents="none" />
       <View style={styles.center}>
         <Image source={DRUM_IMAGE} style={styles.drum} resizeMode="contain" />
-        <ThemedText style={styles.title}>DrumTune</ThemedText>
+        <ThemedText style={styles.title}>Drumming Assist</ThemedText>
         <ThemedText style={styles.tagline}>Perfect Pitch, Every Beat</ThemedText>
       </View>
     </View>
