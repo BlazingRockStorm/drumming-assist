@@ -2,30 +2,15 @@ import { Image, StyleSheet, View } from 'react-native';
 
 import { Palette } from '@/constants/theme';
 import { ThemedText } from '@/components/themed-text';
+import { GlowBackground } from '@/components/ui/glow-background';
 
 // Replace this PNG with your final drum artwork. Recommended ~600×600, transparent bg.
 const DRUM_IMAGE = require('../assets/images/splash-icon.png');
 
-const GLOW_LAYERS = Array.from({ length: 30 }, (_, i) => {
-  const t = i / 29;
-  const size = 30 + Math.pow(t, 1.1) * 250;
-  return { size, opacity: 0.022 };
-});
-
 export function AppSplash() {
   return (
     <View style={styles.root}>
-      <View style={styles.glowContainer} pointerEvents="none">
-        {GLOW_LAYERS.map(({ size, opacity }, i) => (
-          <View
-            key={i}
-            style={[
-              styles.glowLayer,
-              { width: size, height: size, borderRadius: size / 2, opacity },
-            ]}
-          />
-        ))}
-      </View>
+      <GlowBackground />
       <View style={styles.center}>
         <View style={styles.drumWrap}>
           <Image source={DRUM_IMAGE} style={styles.drum} resizeMode="contain" />
@@ -46,19 +31,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
-  },
-  glowContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  glowLayer: {
-    position: 'absolute',
-    backgroundColor: Palette.accent,
   },
   center: {
     alignItems: 'center',
