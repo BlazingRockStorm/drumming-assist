@@ -13,8 +13,8 @@ export default function TabLayout() {
         sceneStyle: { backgroundColor: Palette.bgPrimary },
       }}>
       <Tabs.Screen name="index" options={{ title: 'Kit' }} />
-      <Tabs.Screen name="explore" options={{ title: 'Tune' }} />
-      <Tabs.Screen name="presets" options={{ title: 'Presets' }} />
+      <Tabs.Screen name="explore" options={{ title: 'Tune Guide' }} />
+      <Tabs.Screen name="metronome" options={{ title: 'Metronome' }} />
       <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
     </Tabs>
   );

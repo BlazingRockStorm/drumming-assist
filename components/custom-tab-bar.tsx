@@ -7,7 +7,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 import { Palette } from '@/constants/theme';
 
-type IconKey = 'kit' | 'tune' | 'presets' | 'profile';
+type IconKey = 'kit' | 'tune' | 'metronome' | 'profile';
 
 function TabIcon({ name, color }: { name: IconKey; color: string }) {
   switch (name) {
@@ -15,8 +15,8 @@ function TabIcon({ name, color }: { name: IconKey; color: string }) {
       return <MaterialCommunityIcons name="record-circle-outline" size={20} color={color} />;
     case 'tune':
       return <Feather name="radio" size={18} color={color} />;
-    case 'presets':
-      return <MaterialCommunityIcons name="playlist-music" size={20} color={color} />;
+    case 'metronome':
+      return <MaterialCommunityIcons name="metronome" size={20} color={color} />;
     case 'profile':
       return <Feather name="user" size={18} color={color} />;
   }
@@ -24,8 +24,8 @@ function TabIcon({ name, color }: { name: IconKey; color: string }) {
 
 const ROUTE_META: Record<string, { label: string; icon: IconKey }> = {
   index: { label: 'KIT', icon: 'kit' },
-  explore: { label: 'TUNE', icon: 'tune' },
-  presets: { label: 'PRESETS', icon: 'presets' },
+  explore: { label: 'TUNE GUIDE', icon: 'tune' },
+  metronome: { label: 'METRONOME', icon: 'metronome' },
   profile: { label: 'PROFILE', icon: 'profile' },
 };
 
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     backgroundColor: Palette.accent,
   },
   label: {
-    fontSize: 10,
+    fontSize: 9,
     letterSpacing: 0.5,
   },
 });
