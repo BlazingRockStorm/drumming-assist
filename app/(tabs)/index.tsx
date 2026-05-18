@@ -1,13 +1,13 @@
 import Feather from '@expo/vector-icons/Feather';
 import { router } from 'expo-router';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { KitVisualization } from '@/components/kit-visualization';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Palette } from '@/constants/theme';
-import { DRUMS, type Drum } from '@/constants/drums';
+import { DRUMS, type Drum, type DrumNote } from '@/constants/drums';
 
 const TAB_BAR_SPACE = 100;
 
@@ -20,18 +20,18 @@ export default function KitScreen() {
         contentContainerStyle={[
           styles.scrollContent,
           {
-            paddingTop: insets.top + 8,
+            paddingTop: insets.top + 22,
             paddingBottom: insets.bottom + TAB_BAR_SPACE,
           },
         ]}
         showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <View style={styles.headerLeft}>
-            <ThemedText type="title">My Drum Kit</ThemedText>
+            <ThemedText style={styles.title}>My Drum Kit</ThemedText>
             <ThemedText style={styles.subtitle}>Standard Rock Tuning</ThemedText>
           </View>
           <TouchableOpacity style={styles.iconBtn} activeOpacity={0.7}>
-            <Feather name="settings" size={20} color={Palette.textSecondary} />
+            <Feather name="settings" size={18} color={Palette.textSecondary} />
           </TouchableOpacity>
         </View>
 
@@ -53,6 +53,7 @@ export default function KitScreen() {
 }
 
 function DrumCard({ drum }: { drum: Drum }) {
+  const sizeLabel = drum.depth ? `${drum.size} × ${drum.depth}` : drum.size;
   return (
     <TouchableOpacity
       style={styles.card}
@@ -62,22 +63,12 @@ function DrumCard({ drum }: { drum: Drum }) {
       <View style={styles.cardBody}>
         <View style={styles.cardTopRow}>
           <ThemedText style={styles.drumName}>{drum.name}</ThemedText>
-          <ThemedText style={styles.drumSize}>{drum.size}</ThemedText>
+          <ThemedText style={styles.drumSize}>{sizeLabel}</ThemedText>
         </View>
         <View style={styles.cardBottomRow}>
-          <NoteLine
-            label="Batter"
-            note={drum.batter.target.note}
-            hz={drum.batter.target.frequency}
-            color={drum.color}
-          />
+          <NoteLine direction="batter" note={drum.batter.target} color={drum.color} />
           {drum.resonant && (
-            <NoteLine
-              label="Reso"
-              note={drum.resonant.target.note}
-              hz={drum.resonant.target.frequency}
-              color={drum.color}
-            />
+            <NoteLine direction="reso" note={drum.resonant.target} color={drum.color} />
           )}
         </View>
       </View>
@@ -87,22 +78,21 @@ function DrumCard({ drum }: { drum: Drum }) {
 }
 
 function NoteLine({
-  label,
+  direction,
   note,
-  hz,
   color,
 }: {
-  label: string;
-  note: string;
-  hz: number;
+  direction: 'batter' | 'reso';
+  note: DrumNote;
   color: string;
 }) {
   return (
     <View style={styles.noteLine}>
-      <Feather name="play" size={9} color={color} style={styles.noteIcon} />
-      <ThemedText style={styles.noteLabel}>{label}</ThemedText>
-      <ThemedText style={styles.noteValue}>{note}</ThemedText>
-      <ThemedText style={styles.noteHz}>· {hz} Hz</ThemedText>
+      <Text style={[styles.noteMark, { color }]}>{direction === 'batter' ? '▲' : '▼'}</Text>
+      <ThemedText style={styles.noteLabel}>{direction === 'batter' ? 'Batter' : 'Reso'}</ThemedText>
+      <ThemedText style={styles.noteValue}>
+        {note.note} · {note.frequency} Hz
+      </ThemedText>
     </View>
   );
 }
@@ -118,15 +108,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  headerLeft: { gap: 4, flex: 1 },
+  headerLeft: { gap: 2, flex: 1 },
+  title: {
+    fontSize: 25,
+    fontWeight: '700',
+    color: Palette.textPrimary,
+    letterSpacing: -0.5,
+  },
   subtitle: {
     color: Palette.textSecondary,
-    fontSize: 14,
+    fontSize: 13,
   },
   iconBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: Palette.bgCard,
     alignItems: 'center',
     justifyContent: 'center',
@@ -137,7 +133,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   listTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
     color: Palette.textPrimary,
   },
@@ -159,7 +155,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     borderRadius: 2,
   },
-  cardBody: { flex: 1, gap: 8 },
+  cardBody: { flex: 1, gap: 6 },
   cardTopRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -179,25 +175,25 @@ const styles = StyleSheet.create({
   cardBottomRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 14,
+    gap: 16,
   },
   noteLine: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
   },
-  noteIcon: { marginRight: 2 },
+  noteMark: {
+    fontSize: 8,
+    fontWeight: '700',
+  },
   noteLabel: {
-    fontSize: 12,
-    color: Palette.textSecondary,
+    fontSize: 11,
+    fontWeight: '500',
+    color: Palette.textTertiary,
   },
   noteValue: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '600',
-    color: Palette.textPrimary,
-  },
-  noteHz: {
-    fontSize: 12,
-    color: Palette.textTertiary,
+    color: Palette.textSecondary,
   },
 });

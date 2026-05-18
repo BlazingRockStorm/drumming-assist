@@ -25,6 +25,7 @@ export default function DrumDetailScreen() {
       <Stack.Screen
         options={{
           title: drum.name,
+          headerBackTitle: 'Back',
           headerTintColor: drum.color,
           headerStyle: { backgroundColor: Palette.bgPrimary },
         }}

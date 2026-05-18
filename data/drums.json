@@ -1,0 +1,175 @@
+[
+  {
+    "id": "snare",
+    "name": "Snare Drum",
+    "size": "14\"",
+    "depth": "5.5\"",
+    "color": "#E74C3C",
+    "description": "The backbone of the kit, providing the signature crack on beats 2 and 4.",
+    "batter": {
+      "low": { "note": "B3", "frequency": 247 },
+      "target": { "note": "D4", "frequency": 294 },
+      "high": { "note": "F4", "frequency": 349 }
+    },
+    "resonant": {
+      "low": { "note": "D4", "frequency": 294 },
+      "target": { "note": "F4", "frequency": 349 },
+      "high": { "note": "G4", "frequency": 392 }
+    },
+    "tips": [
+      "Tune batter head to D4 for a full, punchy rock tone.",
+      "Resonant head should sit slightly higher than batter for snap.",
+      "Tighten lugs in a star pattern (opposite lugs) for even tension.",
+      "Tap near each lug — all should ring at the same pitch.",
+      "Snare wires need gentle tension; too tight kills sustain."
+    ]
+  },
+  {
+    "id": "rack-tom-10",
+    "name": "10\" Rack Tom",
+    "size": "10\"",
+    "depth": "7\"",
+    "color": "#3498DB",
+    "description": "The highest tom, ideal for fast fills and bright, cutting accents.",
+    "batter": {
+      "low": { "note": "E3", "frequency": 165 },
+      "target": { "note": "G3", "frequency": 196 },
+      "high": { "note": "A3", "frequency": 220 }
+    },
+    "resonant": {
+      "low": { "note": "G3", "frequency": 196 },
+      "target": { "note": "B3", "frequency": 247 },
+      "high": { "note": "D4", "frequency": 294 }
+    },
+    "tips": [
+      "Should be the highest-pitched tom in the kit.",
+      "Tune resonant head a 3rd or 5th above batter for sustain.",
+      "Listen for a clear fundamental note with no \"wah\" wavering.",
+      "De-tune one lug very slightly if you hear an oscillating pitch."
+    ]
+  },
+  {
+    "id": "rack-tom-12",
+    "name": "12\" Rack Tom",
+    "size": "12\"",
+    "depth": "8\"",
+    "color": "#9B59B6",
+    "description": "The middle tom, bridging the gap between the 10\" and floor tom.",
+    "batter": {
+      "low": { "note": "B2", "frequency": 123 },
+      "target": { "note": "D3", "frequency": 147 },
+      "high": { "note": "F3", "frequency": 175 }
+    },
+    "resonant": {
+      "low": { "note": "D3", "frequency": 147 },
+      "target": { "note": "F#3", "frequency": 185 },
+      "high": { "note": "A3", "frequency": 220 }
+    },
+    "tips": [
+      "Pitch should fall between the 10\" rack and the floor tom.",
+      "Maintain roughly a perfect 5th interval between batter and reso.",
+      "A moon gel pad or dampening ring helps control ring.",
+      "Use a drum dial to match tension at every lug for consistency."
+    ]
+  },
+  {
+    "id": "rack-tom-13",
+    "name": "13\" Rack Tom",
+    "size": "13\"",
+    "depth": "9\"",
+    "color": "#1ABC9C",
+    "description": "A slightly larger rack tom that sits between the 12\" and floor tom in pitch.",
+    "batter": {
+      "low": { "note": "A2", "frequency": 110 },
+      "target": { "note": "C3", "frequency": 131 },
+      "high": { "note": "Eb3", "frequency": 156 }
+    },
+    "resonant": {
+      "low": { "note": "C3", "frequency": 131 },
+      "target": { "note": "E3", "frequency": 165 },
+      "high": { "note": "G3", "frequency": 196 }
+    },
+    "tips": [
+      "Pitch should sit below the 12\" and above the floor tom.",
+      "Works well in a 10/13 or 12/13 two-rack-tom configuration.",
+      "Tune resonant a 3rd or 4th above batter for a warm, full tone.",
+      "A moon gel or light dampening tames harsh overtones.",
+      "Use a drum dial to match tension at every lug for consistency."
+    ]
+  },
+  {
+    "id": "floor-tom",
+    "name": "14\" Floor Tom",
+    "size": "14\"",
+    "depth": "12\"",
+    "color": "#27AE60",
+    "description": "The higher floor tom, bridging the rack toms and the deep 16\" floor.",
+    "batter": {
+      "low": { "note": "G2", "frequency": 98 },
+      "target": { "note": "A2", "frequency": 110 },
+      "high": { "note": "C3", "frequency": 131 }
+    },
+    "resonant": {
+      "low": { "note": "A2", "frequency": 110 },
+      "target": { "note": "C3", "frequency": 131 },
+      "high": { "note": "E3", "frequency": 165 }
+    },
+    "tips": [
+      "Aim for a deep, full tone with good sustain.",
+      "Batter head can be tuned slightly lower than resonant.",
+      "Tune lower for a fat, boomy sound; higher for more punch.",
+      "Check that floor tom legs are tight to prevent sympathetic rattle.",
+      "A small strip of moleskin tape can tame harsh overtones."
+    ]
+  },
+  {
+    "id": "floor-tom-16",
+    "name": "16\" Floor Tom",
+    "size": "16\"",
+    "depth": "14\"",
+    "color": "#16A085",
+    "description": "The larger floor tom, delivering the deepest rumble before the bass drum.",
+    "batter": {
+      "low": { "note": "E2", "frequency": 82 },
+      "target": { "note": "F#2", "frequency": 92 },
+      "high": { "note": "A2", "frequency": 110 }
+    },
+    "resonant": {
+      "low": { "note": "F#2", "frequency": 92 },
+      "target": { "note": "A2", "frequency": 110 },
+      "high": { "note": "C3", "frequency": 131 }
+    },
+    "tips": [
+      "Should be noticeably lower in pitch than the 14\" floor tom.",
+      "A perfect 4th or 5th below the 14\" floor sounds musical in fills.",
+      "Looser tuning suits rock and jazz; tighter gives more attack.",
+      "Check all three legs are even — an uneven drum rings inconsistently.",
+      "Light internal dampening (foam strip) controls low-end boom."
+    ]
+  },
+  {
+    "id": "bass-drum",
+    "name": "Bass Drum",
+    "size": "22\"",
+    "depth": "18\"",
+    "color": "#E67E22",
+    "description": "The foundation of the kit, driving the low-end punch of every groove.",
+    "batter": {
+      "low": { "note": "C2", "frequency": 65 },
+      "target": { "note": "E2", "frequency": 82 },
+      "high": { "note": "A2", "frequency": 110 }
+    },
+    "resonant": {
+      "low": { "note": "A1", "frequency": 55 },
+      "target": { "note": "C2", "frequency": 65 },
+      "high": { "note": "E2", "frequency": 82 }
+    },
+    "tips": [
+      "Tighter batter head gives more attack and click.",
+      "Looser batter head adds depth and low-end boom.",
+      "A small hole in the reso head allows mic placement and tone control.",
+      "Pillow or foam muffling on the batter side reduces ring.",
+      "Tune both heads evenly, or keep batter slightly higher for punch."
+    ]
+  }
+]
