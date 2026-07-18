@@ -23,7 +23,6 @@ expo-env.d.ts
 
 # Debug
 npm-debug.*
-pnpm-debug.*
 yarn-debug.*
 yarn-error.*
 
