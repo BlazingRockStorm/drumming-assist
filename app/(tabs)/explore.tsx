@@ -5,12 +5,14 @@ import { Collapsible } from '@/components/ui/collapsible';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { GUIDE_SECTIONS } from '@/constants/guide';
-import { Palette } from '@/constants/theme';
+import { type ThemePalette } from '@/constants/theme';
+import { useThemedStyles } from '@/hooks/use-theme';
 
 const TAB_BAR_SPACE = 100;
 
 export default function GuideScreen() {
   const insets = useSafeAreaInsets();
+  const styles = useThemedStyles(createStyles);
 
   return (
     <ThemedView style={styles.container}>
@@ -44,7 +46,8 @@ export default function GuideScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (palette: ThemePalette) =>
+  StyleSheet.create({
   container: { flex: 1 },
   scrollContent: {
     paddingHorizontal: 20,
@@ -54,11 +57,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: '700',
-    color: Palette.textPrimary,
+    color: palette.textPrimary,
     letterSpacing: -0.5,
   },
   subtitle: {
-    color: Palette.textSecondary,
+    color: palette.textSecondary,
     fontSize: 13,
   },
   list: { gap: 10 },
@@ -72,7 +75,7 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: Palette.accent,
+    backgroundColor: palette.accent,
     marginTop: 7,
     flexShrink: 0,
   },
@@ -80,6 +83,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 13,
     lineHeight: 19,
-    color: Palette.textSecondary,
+    color: palette.textSecondary,
   },
 });

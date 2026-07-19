@@ -5,7 +5,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Feather from '@expo/vector-icons/Feather';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
-import { Palette } from '@/constants/theme';
+import { type ThemePalette } from '@/constants/theme';
+import { useTheme, useThemedStyles } from '@/hooks/use-theme';
 
 type IconKey = 'kit' | 'tune' | 'metronome' | 'profile';
 
@@ -31,6 +32,8 @@ const ROUTE_META: Record<string, { label: string; icon: IconKey }> = {
 
 export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
+  const { palette } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   return (
     <View style={[styles.wrapper, { paddingBottom: Math.max(insets.bottom, 12) }]} pointerEvents="box-none">
@@ -39,7 +42,7 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
           const meta = ROUTE_META[route.name];
           if (!meta) return null;
           const focused = state.index === index;
-          const tintColor = focused ? Palette.bgPrimary : Palette.textTertiary;
+          const tintColor = focused ? palette.bgPrimary : palette.textTertiary;
           const onPress = () => {
             if (process.env.EXPO_OS === 'ios') {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -73,37 +76,38 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  wrapper: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    paddingHorizontal: 21,
-    paddingTop: 12,
-  },
-  pill: {
-    flexDirection: 'row',
-    backgroundColor: Palette.bgSurface,
-    borderRadius: 36,
-    borderWidth: 1,
-    borderColor: Palette.border,
-    padding: 4,
-    height: 62,
-    alignItems: 'stretch',
-  },
-  tab: {
-    flex: 1,
-    borderRadius: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 4,
-  },
-  tabActive: {
-    backgroundColor: Palette.accent,
-  },
-  label: {
-    fontSize: 9,
-    letterSpacing: 0.5,
-  },
-});
+const createStyles = (palette: ThemePalette) =>
+  StyleSheet.create({
+    wrapper: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 0,
+      paddingHorizontal: 21,
+      paddingTop: 12,
+    },
+    pill: {
+      flexDirection: 'row',
+      backgroundColor: palette.bgSurface,
+      borderRadius: 36,
+      borderWidth: 1,
+      borderColor: palette.border,
+      padding: 4,
+      height: 62,
+      alignItems: 'stretch',
+    },
+    tab: {
+      flex: 1,
+      borderRadius: 28,
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 4,
+    },
+    tabActive: {
+      backgroundColor: palette.accent,
+    },
+    label: {
+      fontSize: 9,
+      letterSpacing: 0.5,
+    },
+  });

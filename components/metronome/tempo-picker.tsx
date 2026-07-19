@@ -1,7 +1,8 @@
 import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { Palette } from '@/constants/theme';
+import { type ThemePalette } from '@/constants/theme';
+import { useThemedStyles } from '@/hooks/use-theme';
 import { TEMPO_MARKINGS, tempoMarkingFor } from './constants';
 
 type Props = {
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export function TempoPicker({ visible, bpm, onSelect, onClose }: Props) {
+  const styles = useThemedStyles(createStyles);
   const active = tempoMarkingFor(bpm).name;
 
   return (
@@ -48,7 +50,8 @@ export function TempoPicker({ visible, bpm, onSelect, onClose }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (palette: ThemePalette) =>
+  StyleSheet.create({
   backdrop: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.55)',
@@ -61,7 +64,7 @@ const styles = StyleSheet.create({
     maxWidth: 360,
     maxHeight: '80%',
     borderRadius: 14,
-    backgroundColor: Palette.bgSurface,
+    backgroundColor: palette.bgSurface,
     paddingVertical: 8,
   },
   list: { paddingVertical: 6 },
@@ -78,19 +81,19 @@ const styles = StyleSheet.create({
     borderRadius: 1,
     backgroundColor: 'transparent',
   },
-  barActive: { backgroundColor: Palette.accent },
+  barActive: { backgroundColor: palette.accent },
   range: {
     width: 64,
     fontSize: 14,
     fontWeight: '600',
-    color: Palette.textSecondary,
+    color: palette.textSecondary,
   },
-  rangeActive: { color: Palette.accent },
+  rangeActive: { color: palette.accent },
   name: {
     flex: 1,
     fontSize: 16,
     fontStyle: 'italic',
-    color: Palette.textSecondary,
+    color: palette.textSecondary,
   },
-  nameActive: { color: Palette.accent },
+  nameActive: { color: palette.accent },
 });

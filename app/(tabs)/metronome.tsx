@@ -19,10 +19,13 @@ import { TempoPicker } from '@/components/metronome/tempo-picker';
 import { TimeSignaturePicker } from '@/components/metronome/time-signature-picker';
 import { useMetronomeEngine } from '@/components/metronome/use-metronome-engine';
 import { ThemedText } from '@/components/themed-text';
-import { Palette } from '@/constants/theme';
+import { type ThemePalette } from '@/constants/theme';
+import { useTheme, useThemedStyles } from '@/hooks/use-theme';
 
 export default function MetronomeScreen() {
   const insets = useSafeAreaInsets();
+  const { palette } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const [bpm, setBpm] = useState(120);
   const [timeSig, setTimeSig] = useState<TimeSignature>('4/4');
   const [subdivision, setSubdivision] = useState<Subdivision>('single');
@@ -46,7 +49,7 @@ export default function MetronomeScreen() {
             style={styles.settingsBtn}
             accessibilityRole="button"
             onPress={() => setTempoPickerOpen(true)}>
-            <Feather name="sliders" size={18} color={Palette.textSecondary} />
+            <Feather name="sliders" size={18} color={palette.textSecondary} />
           </Pressable>
         </View>
 
@@ -63,7 +66,7 @@ export default function MetronomeScreen() {
           <MaterialCommunityIcons
             name={isPlaying ? 'pause' : 'play'}
             size={22}
-            color={Palette.bgPrimary}
+            color={palette.bgPrimary}
           />
           <ThemedText style={styles.playLabel}>{isPlaying ? 'Pause' : 'Play'}</ThemedText>
         </Pressable>
@@ -79,8 +82,9 @@ export default function MetronomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: Palette.bgPrimary },
+const createStyles = (palette: ThemePalette) =>
+  StyleSheet.create({
+  root: { flex: 1, backgroundColor: palette.bgPrimary },
   content: {
     flex: 1,
     paddingHorizontal: 18,
@@ -92,25 +96,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  title: { fontSize: 25, fontWeight: '700', color: Palette.textPrimary, letterSpacing: -0.5 },
-  subtitle: { fontSize: 13, color: Palette.textSecondary, marginTop: 2 },
+  title: { fontSize: 25, fontWeight: '700', color: palette.textPrimary, letterSpacing: -0.5 },
+  subtitle: { fontSize: 13, color: palette.textSecondary, marginTop: 2 },
   settingsBtn: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: Palette.bgSurface,
+    backgroundColor: palette.bgSurface,
     alignItems: 'center',
     justifyContent: 'center',
   },
   playBtn: {
     height: 54,
     borderRadius: 14,
-    backgroundColor: Palette.accent,
+    backgroundColor: palette.accent,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 11,
     marginTop: 'auto',
   },
-  playLabel: { fontSize: 16, fontWeight: '700', color: Palette.bgPrimary },
+  playLabel: { fontSize: 16, fontWeight: '700', color: palette.bgPrimary },
 });

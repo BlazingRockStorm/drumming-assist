@@ -4,13 +4,16 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Palette } from '@/constants/theme';
+import { type ThemePalette } from '@/constants/theme';
+import { useTheme, useThemedStyles } from '@/hooks/use-theme';
 import { DRUMS, type DrumHeadTuning } from '@/constants/drums';
 
 export default function DrumDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const drum = DRUMS.find((d) => d.id === id);
   const insets = useSafeAreaInsets();
+  const { palette } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   if (!drum) {
     return (
@@ -27,7 +30,7 @@ export default function DrumDetailScreen() {
           title: drum.name,
           headerBackTitle: 'Back',
           headerTintColor: drum.color,
-          headerStyle: { backgroundColor: Palette.bgPrimary },
+          headerStyle: { backgroundColor: palette.bgPrimary },
         }}
       />
       <ScrollView
@@ -73,6 +76,7 @@ function HeadCard({
   tuning: DrumHeadTuning;
   color: string;
 }) {
+  const styles = useThemedStyles(createStyles);
   return (
     <View style={styles.headCard}>
       <ThemedText style={styles.cardLabel}>{title}</ThemedText>
@@ -108,10 +112,11 @@ function HeadCard({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (palette: ThemePalette) =>
+  StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Palette.bgPrimary,
+    backgroundColor: palette.bgPrimary,
   },
   content: {
     padding: 16,
@@ -146,20 +151,20 @@ const styles = StyleSheet.create({
   heroDesc: {
     fontSize: 14,
     lineHeight: 20,
-    color: Palette.textSecondary,
+    color: palette.textSecondary,
   },
   headCard: {
     borderRadius: 14,
     padding: 16,
     gap: 14,
-    backgroundColor: Palette.bgSurface,
+    backgroundColor: palette.bgSurface,
   },
   cardLabel: {
     fontSize: 11,
     fontWeight: '700',
     textTransform: 'uppercase',
     letterSpacing: 0.8,
-    color: Palette.textTertiary,
+    color: palette.textTertiary,
     marginBottom: 2,
   },
   headRow: {
@@ -179,7 +184,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
-    color: Palette.textSecondary,
+    color: palette.textSecondary,
     marginBottom: 2,
   },
   targetNote: {
@@ -189,7 +194,7 @@ const styles = StyleSheet.create({
   },
   targetHz: {
     fontSize: 12,
-    color: Palette.textTertiary,
+    color: palette.textTertiary,
     marginTop: 2,
   },
   rangeBox: {
@@ -203,7 +208,7 @@ const styles = StyleSheet.create({
   },
   rangeDir: {
     fontSize: 11,
-    color: Palette.textTertiary,
+    color: palette.textTertiary,
     width: 30,
     textTransform: 'uppercase',
     letterSpacing: 0.4,
@@ -211,12 +216,12 @@ const styles = StyleSheet.create({
   rangeNote: {
     fontSize: 14,
     fontWeight: '600',
-    color: Palette.textPrimary,
+    color: palette.textPrimary,
     width: 38,
   },
   rangeHz: {
     fontSize: 12,
-    color: Palette.textTertiary,
+    color: palette.textTertiary,
   },
   rangeTrack: {
     height: 6,
@@ -224,7 +229,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     justifyContent: 'center',
     marginVertical: 2,
-    backgroundColor: Palette.bgCard,
+    backgroundColor: palette.bgCard,
   },
   rangeTrackFill: {
     position: 'absolute',
@@ -246,7 +251,7 @@ const styles = StyleSheet.create({
   tipsCard: {
     borderRadius: 14,
     padding: 16,
-    backgroundColor: Palette.bgSurface,
+    backgroundColor: palette.bgSurface,
   },
   tipRow: {
     flexDirection: 'row',
@@ -265,6 +270,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 14,
     lineHeight: 20,
-    color: Palette.textSecondary,
+    color: palette.textSecondary,
   },
 });

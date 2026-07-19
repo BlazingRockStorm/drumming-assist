@@ -1,7 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { Palette } from '@/constants/theme';
+import { type ThemePalette } from '@/constants/theme';
+import { useThemedStyles } from '@/hooks/use-theme';
 import { BPM_MAX, BPM_MIN } from './constants';
 import { useBpmDrag } from './use-bpm-drag';
 
@@ -11,6 +12,7 @@ type Props = {
 };
 
 export function BpmSlider({ bpm, onChange }: Props) {
+  const styles = useThemedStyles(createStyles);
   const { panHandlers, onTrackLayout } = useBpmDrag(bpm, onChange);
   const sliderPct = ((bpm - BPM_MIN) / (BPM_MAX - BPM_MIN)) * 100;
 
@@ -34,7 +36,8 @@ export function BpmSlider({ bpm, onChange }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (palette: ThemePalette) =>
+  StyleSheet.create({
   slider: { gap: 9 },
   sliderTouchArea: {
     paddingVertical: 11,
@@ -43,13 +46,13 @@ const styles = StyleSheet.create({
   sliderTrack: {
     height: 5,
     borderRadius: 3,
-    backgroundColor: Palette.bgElevated,
+    backgroundColor: palette.bgElevated,
     position: 'relative',
   },
   sliderFill: {
     height: 5,
     borderRadius: 3,
-    backgroundColor: Palette.accent,
+    backgroundColor: palette.accent,
   },
   sliderThumb: {
     position: 'absolute',
@@ -57,9 +60,9 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     borderRadius: 8,
-    backgroundColor: Palette.accent,
+    backgroundColor: palette.accent,
     marginLeft: -8,
   },
   sliderLabels: { flexDirection: 'row', justifyContent: 'space-between' },
-  sliderLabel: { fontSize: 10, color: Palette.textTertiary },
+  sliderLabel: { fontSize: 10, color: palette.textTertiary },
 });

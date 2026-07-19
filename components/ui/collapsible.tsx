@@ -3,10 +3,13 @@ import { PropsWithChildren, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { Palette } from '@/constants/theme';
+import { type ThemePalette } from '@/constants/theme';
+import { useTheme, useThemedStyles } from '@/hooks/use-theme';
 
 export function Collapsible({ children, title }: PropsWithChildren & { title: string }) {
   const [isOpen, setIsOpen] = useState(false);
+  const { palette } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   return (
     <View style={styles.card}>
@@ -18,7 +21,7 @@ export function Collapsible({ children, title }: PropsWithChildren & { title: st
         <Feather
           name="chevron-right"
           size={18}
-          color={Palette.textSecondary}
+          color={palette.textSecondary}
           style={{ transform: [{ rotate: isOpen ? '90deg' : '0deg' }] }}
         />
       </TouchableOpacity>
@@ -27,9 +30,10 @@ export function Collapsible({ children, title }: PropsWithChildren & { title: st
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (palette: ThemePalette) =>
+  StyleSheet.create({
   card: {
-    backgroundColor: Palette.bgSurface,
+    backgroundColor: palette.bgSurface,
     borderRadius: 14,
     padding: 16,
   },
@@ -42,7 +46,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: '600',
-    color: Palette.textPrimary,
+    color: palette.textPrimary,
     flex: 1,
   },
   content: {

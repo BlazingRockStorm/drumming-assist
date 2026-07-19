@@ -1,7 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { Palette } from '@/constants/theme';
+import { DrumColors, type ThemePalette } from '@/constants/theme';
+import { useThemedStyles } from '@/hooks/use-theme';
 
 const VIZ_WIDTH = 353;
 const VIZ_HEIGHT = 226;
@@ -18,7 +19,7 @@ type Ring = {
 
 const BASS = {
   label: 'BD',
-  color: Palette.bass,
+  color: DrumColors.bass,
   width: 82,
   height: 67,
   x: 131,
@@ -29,15 +30,16 @@ const BASS = {
 };
 
 const RINGS: Ring[] = [
-  { label: '12"', color: Palette.tom12, size: 45, x: 122, y: 26 },
-  { label: '13"', color: Palette.tom13, size: 48, x: 177, y: 24 },
-  { label: '10"', color: Palette.tom10, size: 37, x: 84, y: 56 },
-  { label: 'SN', color: Palette.snare, size: 52, x: 110, y: 111, thickness: 2.5 },
-  { label: '14"', color: Palette.floor14, size: 52, x: 193, y: 107 },
-  { label: '16"', color: Palette.floor16, size: 59, x: 222, y: 155 },
+  { label: '12"', color: DrumColors.tom12, size: 45, x: 122, y: 26 },
+  { label: '13"', color: DrumColors.tom13, size: 48, x: 177, y: 24 },
+  { label: '10"', color: DrumColors.tom10, size: 37, x: 84, y: 56 },
+  { label: 'SN', color: DrumColors.snare, size: 52, x: 110, y: 111, thickness: 2.5 },
+  { label: '14"', color: DrumColors.floor14, size: 52, x: 193, y: 107 },
+  { label: '16"', color: DrumColors.floor16, size: 59, x: 222, y: 155 },
 ];
 
 export function KitVisualization() {
+  const styles = useThemedStyles(createStyles);
   return (
     <View style={styles.card}>
       <View
@@ -84,11 +86,12 @@ export function KitVisualization() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (palette: ThemePalette) =>
+  StyleSheet.create({
   card: {
     height: VIZ_HEIGHT,
     borderRadius: 16,
-    backgroundColor: Palette.bgSurface,
+    backgroundColor: palette.bgSurface,
     overflow: 'hidden',
     position: 'relative',
   },

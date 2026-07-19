@@ -4,10 +4,13 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Palette } from '@/constants/theme';
+import { type ThemePalette } from '@/constants/theme';
+import { useTheme, useThemedStyles } from '@/hooks/use-theme';
 
 export default function PresetsScreen() {
   const insets = useSafeAreaInsets();
+  const { palette } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <ThemedView style={styles.container}>
       <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
@@ -16,7 +19,7 @@ export default function PresetsScreen() {
       </View>
       <View style={styles.empty}>
         <View style={styles.iconWrap}>
-          <MaterialCommunityIcons name="playlist-music" size={36} color={Palette.accent} />
+          <MaterialCommunityIcons name="playlist-music" size={36} color={palette.accent} />
         </View>
         <ThemedText style={styles.emptyTitle}>Coming Soon</ThemedText>
         <ThemedText style={styles.emptyDesc}>
@@ -27,10 +30,11 @@ export default function PresetsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (palette: ThemePalette) =>
+  StyleSheet.create({
   container: { flex: 1 },
   header: { paddingHorizontal: 20, paddingBottom: 8 },
-  subtitle: { marginTop: 4, color: Palette.textSecondary, fontSize: 14 },
+  subtitle: { marginTop: 4, color: palette.textSecondary, fontSize: 14 },
   empty: {
     flex: 1,
     alignItems: 'center',
@@ -42,14 +46,14 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: Palette.accentSoft,
+    backgroundColor: palette.accentSoft,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 8,
   },
-  emptyTitle: { fontSize: 20, fontWeight: '700', color: Palette.textPrimary },
+  emptyTitle: { fontSize: 20, fontWeight: '700', color: palette.textPrimary },
   emptyDesc: {
-    color: Palette.textSecondary,
+    color: palette.textSecondary,
     fontSize: 14,
     textAlign: 'center',
     lineHeight: 20,

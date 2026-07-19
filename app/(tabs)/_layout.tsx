@@ -2,15 +2,16 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 
 import { CustomTabBar } from '@/components/custom-tab-bar';
-import { Palette } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
 
 export default function TabLayout() {
+  const { palette } = useTheme();
   return (
     <Tabs
       tabBar={(props) => <CustomTabBar {...props} />}
       screenOptions={{
         headerShown: false,
-        sceneStyle: { backgroundColor: Palette.bgPrimary },
+        sceneStyle: { backgroundColor: palette.bgPrimary },
       }}>
       <Tabs.Screen name="index" options={{ title: 'Kit' }} />
       <Tabs.Screen name="explore" options={{ title: 'Tune Guide' }} />

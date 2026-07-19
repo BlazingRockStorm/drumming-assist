@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 
-import { Palette } from '@/constants/theme';
+import { type ThemePalette } from '@/constants/theme';
+import { useThemedStyles } from '@/hooks/use-theme';
 
 const GLOW_LAYERS = Array.from({ length: 30 }, (_, i) => {
   const t = i / 29;
@@ -9,6 +10,7 @@ const GLOW_LAYERS = Array.from({ length: 30 }, (_, i) => {
 });
 
 export function GlowBackground() {
+  const styles = useThemedStyles(createStyles);
   return (
     <View style={styles.glowContainer} pointerEvents="none">
       {GLOW_LAYERS.map(({ size, opacity }, i) => (
@@ -24,7 +26,8 @@ export function GlowBackground() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (palette: ThemePalette) =>
+  StyleSheet.create({
   glowContainer: {
     position: 'absolute',
     top: 0,
@@ -36,6 +39,6 @@ const styles = StyleSheet.create({
   },
   glowLayer: {
     position: 'absolute',
-    backgroundColor: Palette.accent,
+    backgroundColor: palette.accent,
   },
 });

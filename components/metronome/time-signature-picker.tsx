@@ -1,7 +1,8 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { Palette } from '@/constants/theme';
+import { type ThemePalette } from '@/constants/theme';
+import { useThemedStyles } from '@/hooks/use-theme';
 import { TIME_SIGNATURES, type TimeSignature } from './constants';
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
 };
 
 export function TimeSignaturePicker({ value, onChange }: Props) {
+  const styles = useThemedStyles(createStyles);
   return (
     <View style={styles.section}>
       <ThemedText style={styles.sectionLabel}>Time Signature</ThemedText>
@@ -37,20 +39,21 @@ export function TimeSignaturePicker({ value, onChange }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (palette: ThemePalette) =>
+  StyleSheet.create({
   section: { gap: 7 },
-  sectionLabel: { fontSize: 12, fontWeight: '600', color: Palette.textSecondary },
+  sectionLabel: { fontSize: 12, fontWeight: '600', color: palette.textSecondary },
   tsGrid: { gap: 5 },
   tsRow: { flexDirection: 'row', gap: 5 },
   tsChip: {
     flex: 1,
     height: 36,
     borderRadius: 7,
-    backgroundColor: Palette.bgCard,
+    backgroundColor: palette.bgCard,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  tsChipActive: { backgroundColor: Palette.accent },
-  tsChipLabel: { fontSize: 13, fontWeight: '600', color: Palette.textPrimary },
-  tsChipLabelActive: { color: Palette.bgPrimary },
+  tsChipActive: { backgroundColor: palette.accent },
+  tsChipLabel: { fontSize: 13, fontWeight: '600', color: palette.textPrimary },
+  tsChipLabelActive: { color: palette.bgPrimary },
 });

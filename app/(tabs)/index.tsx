@@ -6,13 +6,16 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KitVisualization } from '@/components/kit-visualization';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Palette } from '@/constants/theme';
+import { type ThemePalette } from '@/constants/theme';
+import { useTheme, useThemedStyles } from '@/hooks/use-theme';
 import { DRUMS, type Drum, type DrumNote } from '@/constants/drums';
 
 const TAB_BAR_SPACE = 100;
 
 export default function KitScreen() {
   const insets = useSafeAreaInsets();
+  const { palette } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   return (
     <ThemedView style={styles.container}>
@@ -31,7 +34,7 @@ export default function KitScreen() {
             <ThemedText style={styles.subtitle}>Standard Rock Tuning</ThemedText>
           </View>
           <TouchableOpacity style={styles.iconBtn} activeOpacity={0.7}>
-            <Feather name="settings" size={18} color={Palette.textSecondary} />
+            <Feather name="settings" size={18} color={palette.textSecondary} />
           </TouchableOpacity>
         </View>
 
@@ -53,6 +56,8 @@ export default function KitScreen() {
 }
 
 function DrumCard({ drum }: { drum: Drum }) {
+  const { palette } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const sizeLabel = drum.depth ? `${drum.size} × ${drum.depth}` : drum.size;
   return (
     <TouchableOpacity
@@ -72,7 +77,7 @@ function DrumCard({ drum }: { drum: Drum }) {
           )}
         </View>
       </View>
-      <Feather name="chevron-right" size={18} color={Palette.textTertiary} />
+      <Feather name="chevron-right" size={18} color={palette.textTertiary} />
     </TouchableOpacity>
   );
 }
@@ -86,6 +91,7 @@ function NoteLine({
   note: DrumNote;
   color: string;
 }) {
+  const styles = useThemedStyles(createStyles);
   return (
     <View style={styles.noteLine}>
       <Text style={[styles.noteMark, { color }]}>{direction === 'batter' ? '▲' : '▼'}</Text>
@@ -97,7 +103,8 @@ function NoteLine({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (palette: ThemePalette) =>
+  StyleSheet.create({
   container: { flex: 1 },
   scrollContent: {
     paddingHorizontal: 20,
@@ -112,18 +119,18 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: '700',
-    color: Palette.textPrimary,
+    color: palette.textPrimary,
     letterSpacing: -0.5,
   },
   subtitle: {
-    color: Palette.textSecondary,
+    color: palette.textSecondary,
     fontSize: 13,
   },
   iconBtn: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: Palette.bgCard,
+    backgroundColor: palette.bgCard,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -135,18 +142,18 @@ const styles = StyleSheet.create({
   listTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: Palette.textPrimary,
+    color: palette.textPrimary,
   },
   listCount: {
     fontSize: 13,
-    color: Palette.textTertiary,
+    color: palette.textTertiary,
   },
   list: { gap: 10 },
   card: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 14,
-    backgroundColor: Palette.bgSurface,
+    backgroundColor: palette.bgSurface,
     borderRadius: 14,
     padding: 16,
   },
@@ -165,12 +172,12 @@ const styles = StyleSheet.create({
   drumName: {
     fontSize: 16,
     fontWeight: '600',
-    color: Palette.textPrimary,
+    color: palette.textPrimary,
     flexShrink: 1,
   },
   drumSize: {
     fontSize: 12,
-    color: Palette.textTertiary,
+    color: palette.textTertiary,
   },
   cardBottomRow: {
     flexDirection: 'row',
@@ -189,11 +196,11 @@ const styles = StyleSheet.create({
   noteLabel: {
     fontSize: 11,
     fontWeight: '500',
-    color: Palette.textTertiary,
+    color: palette.textTertiary,
   },
   noteValue: {
     fontSize: 11,
     fontWeight: '600',
-    color: Palette.textSecondary,
+    color: palette.textSecondary,
   },
 });

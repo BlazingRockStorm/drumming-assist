@@ -1,6 +1,7 @@
 import { Image, StyleSheet, View } from 'react-native';
 
-import { Palette } from '@/constants/theme';
+import { type ThemePalette } from '@/constants/theme';
+import { useThemedStyles } from '@/hooks/use-theme';
 import { ThemedText } from '@/components/themed-text';
 import { GlowBackground } from '@/components/ui/glow-background';
 
@@ -8,6 +9,7 @@ import { GlowBackground } from '@/components/ui/glow-background';
 const DRUM_IMAGE = require('../assets/images/splash-icon.png');
 
 export function AppSplash() {
+  const styles = useThemedStyles(createStyles);
   return (
     <View style={styles.root}>
       <GlowBackground />
@@ -24,10 +26,11 @@ export function AppSplash() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (palette: ThemePalette) =>
+  StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: Palette.bgPrimary,
+    backgroundColor: palette.bgPrimary,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
@@ -58,11 +61,11 @@ const styles = StyleSheet.create({
     lineHeight: 44,
     fontWeight: '700',
     letterSpacing: -0.5,
-    color: Palette.textPrimary,
+    color: palette.textPrimary,
   },
   tagline: {
     fontSize: 15,
     lineHeight: 22,
-    color: Palette.textSecondary,
+    color: palette.textSecondary,
   },
 });

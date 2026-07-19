@@ -1,7 +1,8 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { Palette } from '@/constants/theme';
+import { type ThemePalette } from '@/constants/theme';
+import { useThemedStyles } from '@/hooks/use-theme';
 import { tempoLabel } from './constants';
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
 };
 
 export function BpmControl({ bpm, onAdjust }: Props) {
+  const styles = useThemedStyles(createStyles);
   return (
     <View style={styles.bpmRow}>
       <Pressable style={styles.stepBtn} onPress={() => onAdjust(-1)} accessibilityRole="button">
@@ -33,7 +35,8 @@ export function BpmControl({ bpm, onAdjust }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (palette: ThemePalette) =>
+  StyleSheet.create({
   bpmRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -44,11 +47,11 @@ const styles = StyleSheet.create({
     width: 47,
     height: 47,
     borderRadius: 24,
-    backgroundColor: Palette.bgSurface,
+    backgroundColor: palette.bgSurface,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  stepLabel: { fontSize: 23, color: Palette.textPrimary, lineHeight: 25 },
+  stepLabel: { fontSize: 23, color: palette.textPrimary, lineHeight: 25 },
   bpmCircle: {
     width: 180,
     height: 180,
@@ -61,17 +64,17 @@ const styles = StyleSheet.create({
     height: 180,
     borderRadius: 90,
     borderWidth: 20,
-    borderColor: Palette.accent,
+    borderColor: palette.accent,
   },
   bpmInner: {
     position: 'absolute',
     width: 139,
     height: 139,
     borderRadius: 70,
-    backgroundColor: Palette.bgElevated,
+    backgroundColor: palette.bgElevated,
   },
   bpmDisplay: { alignItems: 'center', gap: 2 },
-  tempoLabel: { fontSize: 11, color: Palette.textSecondary, letterSpacing: 0.5, fontWeight: '300' },
-  bpmValue: { fontSize: 47, fontWeight: '700', color: Palette.textPrimary, lineHeight: 50 },
-  bpmUnit: { fontSize: 9, color: Palette.textTertiary, letterSpacing: 2 },
+  tempoLabel: { fontSize: 11, color: palette.textSecondary, letterSpacing: 0.5, fontWeight: '300' },
+  bpmValue: { fontSize: 47, fontWeight: '700', color: palette.textPrimary, lineHeight: 50 },
+  bpmUnit: { fontSize: 9, color: palette.textTertiary, letterSpacing: 2 },
 });

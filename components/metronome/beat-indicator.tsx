@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { Palette } from '@/constants/theme';
+import { type ThemePalette } from '@/constants/theme';
+import { useThemedStyles } from '@/hooks/use-theme';
 
 type Props = {
   beats: number;
@@ -10,6 +11,7 @@ type Props = {
 };
 
 export function BeatIndicator({ beats, activeBeat, isPlaying }: Props) {
+  const styles = useThemedStyles(createStyles);
   const dots = useMemo(() => Array.from({ length: beats }), [beats]);
   return (
     <View style={styles.beats}>
@@ -26,7 +28,8 @@ export function BeatIndicator({ beats, activeBeat, isPlaying }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (palette: ThemePalette) =>
+  StyleSheet.create({
   beats: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -38,12 +41,12 @@ const styles = StyleSheet.create({
     width: 13,
     height: 13,
     borderRadius: 7,
-    backgroundColor: Palette.bgElevated,
+    backgroundColor: palette.bgElevated,
   },
   beatDotActive: {
     width: 20,
     height: 20,
     borderRadius: 10,
-    backgroundColor: Palette.accent,
+    backgroundColor: palette.accent,
   },
 });

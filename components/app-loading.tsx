@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { Palette } from '@/constants/theme';
+import { type ThemePalette } from '@/constants/theme';
+import { useThemedStyles } from '@/hooks/use-theme';
 import { ThemedText } from '@/components/themed-text';
 import { GlowBackground } from '@/components/ui/glow-background';
 
@@ -11,6 +12,7 @@ const HOLD_MS = 200;
 
 export function AppLoading({ onDone }: { onDone: () => void }) {
   const [progress, setProgress] = useState(0);
+  const styles = useThemedStyles(createStyles);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -59,10 +61,11 @@ export function AppLoading({ onDone }: { onDone: () => void }) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (palette: ThemePalette) =>
+  StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: Palette.bgPrimary,
+    backgroundColor: palette.bgPrimary,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
@@ -85,7 +88,7 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 35,
     borderWidth: 2.5,
-    borderColor: Palette.accent,
+    borderColor: palette.accent,
   },
   ringInner: {
     position: 'absolute',
@@ -93,7 +96,7 @@ const styles = StyleSheet.create({
     height: 42,
     borderRadius: 21,
     borderWidth: 1.5,
-    borderColor: Palette.accent,
+    borderColor: palette.accent,
     opacity: 0.6,
   },
   ringDot: {
@@ -101,18 +104,18 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: Palette.accent,
+    backgroundColor: palette.accent,
   },
   title: {
     fontSize: 26,
     fontWeight: '700',
     letterSpacing: -0.5,
-    color: Palette.textPrimary,
+    color: palette.textPrimary,
   },
   spacer: { height: 8 },
   label: {
     fontSize: 14,
-    color: Palette.textSecondary,
+    color: palette.textSecondary,
   },
   progressArea: {
     alignItems: 'center',
@@ -123,23 +126,23 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 4,
     borderRadius: 2,
-    backgroundColor: Palette.bgCard,
+    backgroundColor: palette.bgCard,
     overflow: 'hidden',
   },
   trackFill: {
     height: '100%',
     borderRadius: 2,
-    backgroundColor: Palette.accent,
+    backgroundColor: palette.accent,
   },
   pct: {
     fontSize: 12,
     fontWeight: '500',
-    color: Palette.textTertiary,
+    color: palette.textTertiary,
   },
   tipSpacer: { height: 24 },
   tip: {
     fontSize: 12,
-    color: Palette.textTertiary,
+    color: palette.textTertiary,
     textAlign: 'center',
     lineHeight: 18,
   },

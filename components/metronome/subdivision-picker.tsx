@@ -2,7 +2,8 @@ import { Image } from 'expo-image';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { Palette } from '@/constants/theme';
+import { type ThemePalette } from '@/constants/theme';
+import { useTheme, useThemedStyles } from '@/hooks/use-theme';
 import { SUBDIVISIONS, SUB_ICONS, type Subdivision } from './constants';
 
 type Props = {
@@ -11,6 +12,8 @@ type Props = {
 };
 
 export function SubdivisionPicker({ value, onChange }: Props) {
+  const { palette } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <View style={styles.section}>
       <ThemedText style={styles.sectionLabel}>Subdivision</ThemedText>
@@ -25,7 +28,7 @@ export function SubdivisionPicker({ value, onChange }: Props) {
               <Image
                 source={SUB_ICONS[s]}
                 style={styles.subIcon}
-                tintColor={active ? Palette.bgPrimary : Palette.textPrimary}
+                tintColor={active ? palette.bgPrimary : palette.textPrimary}
                 contentFit="contain"
               />
             </Pressable>
@@ -36,18 +39,19 @@ export function SubdivisionPicker({ value, onChange }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (palette: ThemePalette) =>
+  StyleSheet.create({
   section: { gap: 7 },
-  sectionLabel: { fontSize: 12, fontWeight: '600', color: Palette.textSecondary },
+  sectionLabel: { fontSize: 12, fontWeight: '600', color: palette.textSecondary },
   subRow: { flexDirection: 'row', gap: 5 },
   subChip: {
     flex: 1,
     height: 47,
     borderRadius: 7,
-    backgroundColor: Palette.bgCard,
+    backgroundColor: palette.bgCard,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  subChipActive: { backgroundColor: Palette.accent },
+  subChipActive: { backgroundColor: palette.accent },
   subIcon: { width: 44, height: 30 },
 });

@@ -1,34 +1,37 @@
-import { DarkTheme, ThemeProvider } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import 'react-native-reanimated';
 
 import { AppLoading } from '@/components/app-loading';
 import { AppSplash } from '@/components/app-splash';
-import { Palette } from '@/constants/theme';
+import { AppThemeProvider, useTheme } from '@/hooks/use-theme';
 
 export const unstable_settings = {
   anchor: '(tabs)',
 };
 
-const navTheme = {
-  ...DarkTheme,
-  colors: {
-    ...DarkTheme.colors,
-    background: Palette.bgPrimary,
-    card: Palette.bgPrimary,
-    text: Palette.textPrimary,
-    border: Palette.border,
-    primary: Palette.accent,
-  },
-};
-
 const SPLASH_MS = 1400;
 
-export default function RootLayout() {
+function RootNavigator() {
+  const { palette } = useTheme();
   const [phase, setPhase] = useState<'splash' | 'loading' | 'ready'>('splash');
 
+  const navTheme = useMemo(() => {
+    const base = palette.scheme === 'dark' ? DarkTheme : DefaultTheme;
+    return {
+      ...base,
+      colors: {
+        ...base.colors,
+        background: palette.bgPrimary,
+        card: palette.bgPrimary,
+        text: palette.textPrimary,
+        border: palette.border,
+        primary: palette.accent,
+      },
+    };
+  }, [palette]);
 
   useEffect(() => {
     if (phase !== 'splash') return;
@@ -43,15 +46,23 @@ export default function RootLayout() {
       {phase === 'ready' && (
         <Stack
           screenOptions={{
-            contentStyle: { backgroundColor: Palette.bgPrimary },
-            headerStyle: { backgroundColor: Palette.bgPrimary },
-            headerTintColor: Palette.textPrimary,
+            contentStyle: { backgroundColor: palette.bgPrimary },
+            headerStyle: { backgroundColor: palette.bgPrimary },
+            headerTintColor: palette.textPrimary,
           }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
         </Stack>
       )}
-      <StatusBar style="light" />
+      <StatusBar style={palette.scheme === 'dark' ? 'light' : 'dark'} />
     </ThemeProvider>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <AppThemeProvider>
+      <RootNavigator />
+    </AppThemeProvider>
   );
 }
