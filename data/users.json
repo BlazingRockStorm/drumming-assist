@@ -1,0 +1,12 @@
+{
+  "users": [
+    {
+      "id": "usr_gryqhon129",
+      "username": "Gryqhon129",
+      "password": "password",
+      "displayName": "Gryqhon",
+      "email": "gryqhon129@example.com",
+      "plan": "pro"
+    }
+  ]
+}

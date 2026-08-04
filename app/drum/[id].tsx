@@ -1,4 +1,4 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { Redirect, Stack, useLocalSearchParams } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -6,6 +6,7 @@ import { LugTuning } from '@/components/drum/lug-tuning';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { type ThemePalette } from '@/constants/theme';
+import { useAuth } from '@/hooks/use-auth';
 import { useTheme, useThemedStyles } from '@/hooks/use-theme';
 import { DRUMS, type DrumHeadTuning } from '@/constants/drums';
 
@@ -14,7 +15,12 @@ export default function DrumDetailScreen() {
   const drum = DRUMS.find((d) => d.id === id);
   const insets = useSafeAreaInsets();
   const { palette } = useTheme();
+  const { isPro, hydrated } = useAuth();
   const styles = useThemedStyles(createStyles);
+
+  // Pro-only route — guard direct/deep-link access, not just the Kit tab.
+  if (!hydrated) return null;
+  if (!isPro) return <Redirect href="/metronome" />;
 
   if (!drum) {
     return (

@@ -6,6 +6,7 @@ import Feather from '@expo/vector-icons/Feather';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 import { type ThemePalette } from '@/constants/theme';
+import { useAuth } from '@/hooks/use-auth';
 import { useTheme, useThemedStyles } from '@/hooks/use-theme';
 
 type IconKey = 'kit' | 'tune' | 'metronome' | 'profile';
@@ -33,6 +34,7 @@ const ROUTE_META: Record<string, { label: string; icon: IconKey }> = {
 export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
   const { palette } = useTheme();
+  const { isPro } = useAuth();
   const styles = useThemedStyles(createStyles);
 
   return (
@@ -41,6 +43,8 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
         {state.routes.map((route, index) => {
           const meta = ROUTE_META[route.name];
           if (!meta) return null;
+          // The Kit tab (drum tuner) is a Pro feature — hide it from guests.
+          if (route.name === 'index' && !isPro) return null;
           const focused = state.index === index;
           const tintColor = focused ? palette.bgPrimary : palette.textTertiary;
           const onPress = () => {

@@ -1,5 +1,5 @@
 import Feather from '@expo/vector-icons/Feather';
-import { router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -7,6 +7,7 @@ import { KitVisualization } from '@/components/kit-visualization';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { type ThemePalette } from '@/constants/theme';
+import { useAuth } from '@/hooks/use-auth';
 import { useTheme, useThemedStyles } from '@/hooks/use-theme';
 import { DRUMS, type Drum, type DrumNote } from '@/constants/drums';
 
@@ -15,7 +16,13 @@ const TAB_BAR_SPACE = 100;
 export default function KitScreen() {
   const insets = useSafeAreaInsets();
   const { palette } = useTheme();
+  const { isPro, hydrated } = useAuth();
   const styles = useThemedStyles(createStyles);
+
+  // The Kit tuner is Pro-only. Wait for the persisted session before deciding,
+  // then bounce guests to their default tab (Metronome).
+  if (!hydrated) return null;
+  if (!isPro) return <Redirect href="/metronome" />;
 
   return (
     <ThemedView style={styles.container}>

@@ -6,6 +6,7 @@ import 'react-native-reanimated';
 
 import { AppLoading } from '@/components/app-loading';
 import { AppSplash } from '@/components/app-splash';
+import { AuthProvider } from '@/hooks/use-auth';
 import { AppThemeProvider, useTheme } from '@/hooks/use-theme';
 
 export const unstable_settings = {
@@ -62,7 +63,9 @@ function RootNavigator() {
 export default function RootLayout() {
   return (
     <AppThemeProvider>
-      <RootNavigator />
+      <AuthProvider>
+        <RootNavigator />
+      </AuthProvider>
     </AppThemeProvider>
   );
 }
