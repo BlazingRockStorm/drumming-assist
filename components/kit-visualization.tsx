@@ -8,6 +8,7 @@ const VIZ_WIDTH = 353;
 const VIZ_HEIGHT = 226;
 
 type Ring = {
+  id: string;
   label: string;
   color: string;
   size: number;
@@ -18,6 +19,7 @@ type Ring = {
 };
 
 const BASS = {
+  id: 'bass-drum',
   label: 'BD',
   color: DrumColors.bass,
   width: 82,
@@ -30,37 +32,45 @@ const BASS = {
 };
 
 const RINGS: Ring[] = [
-  { label: '12"', color: DrumColors.tom12, size: 45, x: 122, y: 26 },
-  { label: '13"', color: DrumColors.tom13, size: 48, x: 177, y: 24 },
-  { label: '10"', color: DrumColors.tom10, size: 37, x: 84, y: 56 },
-  { label: 'SN', color: DrumColors.snare, size: 52, x: 110, y: 111, thickness: 2.5 },
-  { label: '14"', color: DrumColors.floor14, size: 52, x: 193, y: 107 },
-  { label: '16"', color: DrumColors.floor16, size: 59, x: 222, y: 155 },
+  { id: 'rack-tom-12', label: '12"', color: DrumColors.tom12, size: 45, x: 122, y: 26 },
+  { id: 'rack-tom-13', label: '13"', color: DrumColors.tom13, size: 48, x: 177, y: 24 },
+  { id: 'rack-tom-10', label: '10"', color: DrumColors.tom10, size: 37, x: 84, y: 56 },
+  { id: 'snare', label: 'SN', color: DrumColors.snare, size: 52, x: 110, y: 111, thickness: 2.5 },
+  { id: 'floor-tom', label: '14"', color: DrumColors.floor14, size: 52, x: 193, y: 107 },
+  { id: 'floor-tom-16', label: '16"', color: DrumColors.floor16, size: 59, x: 222, y: 155 },
 ];
 
-export function KitVisualization() {
+/**
+ * Renders the kit layout. Pass `visible` (a set of piece ids) to show only
+ * those pieces; omit it to show the full kit.
+ */
+export function KitVisualization({ visible }: { visible?: Set<string> } = {}) {
   const styles = useThemedStyles(createStyles);
+  const showBass = !visible || visible.has(BASS.id);
+  const rings = visible ? RINGS.filter((r) => visible.has(r.id)) : RINGS;
   return (
     <View style={styles.card}>
-      <View
-        style={[
-          styles.shape,
-          {
-            width: BASS.width,
-            height: BASS.height,
-            borderRadius: BASS.cornerRadius,
-            borderColor: BASS.color,
-            borderWidth: BASS.thickness,
-            opacity: BASS.opacity,
-            left: `${(BASS.x / VIZ_WIDTH) * 100}%`,
-            top: BASS.y,
-          },
-        ]}>
-        <ThemedText style={[styles.label, { color: BASS.color, fontSize: 11 }]}>
-          {BASS.label}
-        </ThemedText>
-      </View>
-      {RINGS.map((r) => (
+      {showBass && (
+        <View
+          style={[
+            styles.shape,
+            {
+              width: BASS.width,
+              height: BASS.height,
+              borderRadius: BASS.cornerRadius,
+              borderColor: BASS.color,
+              borderWidth: BASS.thickness,
+              opacity: BASS.opacity,
+              left: `${(BASS.x / VIZ_WIDTH) * 100}%`,
+              top: BASS.y,
+            },
+          ]}>
+          <ThemedText style={[styles.label, { color: BASS.color, fontSize: 11 }]}>
+            {BASS.label}
+          </ThemedText>
+        </View>
+      )}
+      {rings.map((r) => (
         <View
           key={r.label}
           style={[

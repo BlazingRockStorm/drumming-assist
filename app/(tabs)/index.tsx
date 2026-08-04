@@ -8,6 +8,7 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { type ThemePalette } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
+import { useKit } from '@/hooks/use-kit';
 import { useTheme, useThemedStyles } from '@/hooks/use-theme';
 import { DRUMS, type Drum, type DrumNote } from '@/constants/drums';
 
@@ -17,12 +18,15 @@ export default function KitScreen() {
   const insets = useSafeAreaInsets();
   const { palette } = useTheme();
   const { isPro, hydrated } = useAuth();
+  const { isInKit } = useKit();
   const styles = useThemedStyles(createStyles);
 
   // The Kit tuner is Pro-only. Wait for the persisted session before deciding,
   // then bounce guests to their default tab (Metronome).
   if (!hydrated) return null;
   if (!isPro) return <Redirect href="/metronome" />;
+
+  const drums = DRUMS.filter((drum) => isInKit(drum.id));
 
   return (
     <ThemedView style={styles.container}>
@@ -40,7 +44,12 @@ export default function KitScreen() {
             <ThemedText style={styles.title}>My Drum Kit</ThemedText>
             <ThemedText style={styles.subtitle}>Standard Rock Tuning</ThemedText>
           </View>
-          <TouchableOpacity style={styles.iconBtn} activeOpacity={0.7}>
+          <TouchableOpacity
+            style={styles.iconBtn}
+            activeOpacity={0.7}
+            onPress={() => router.push('/kit-customize' as never)}
+            accessibilityRole="button"
+            accessibilityLabel="Customize kit">
             <Feather name="settings" size={18} color={palette.textSecondary} />
           </TouchableOpacity>
         </View>
@@ -49,11 +58,11 @@ export default function KitScreen() {
 
         <View style={styles.listHeader}>
           <ThemedText style={styles.listTitle}>Drums</ThemedText>
-          <ThemedText style={styles.listCount}>{DRUMS.length} drums</ThemedText>
+          <ThemedText style={styles.listCount}>{drums.length} drums</ThemedText>
         </View>
 
         <View style={styles.list}>
-          {DRUMS.map((drum) => (
+          {drums.map((drum) => (
             <DrumCard key={drum.id} drum={drum} />
           ))}
         </View>
