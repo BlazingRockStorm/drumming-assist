@@ -2,6 +2,7 @@ import { Stack, useLocalSearchParams } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { LugTuning } from '@/components/drum/lug-tuning';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { type ThemePalette } from '@/constants/theme';
@@ -47,12 +48,6 @@ export default function DrumDetailScreen() {
           </View>
         </View>
 
-        <HeadCard title="Batter Head" tuning={drum.batter} color={drum.color} />
-
-        {drum.resonant && (
-          <HeadCard title="Resonant Head" tuning={drum.resonant} color={drum.color} />
-        )}
-
         <View style={styles.tipsCard}>
           <ThemedText style={styles.cardLabel}>Tuning Tips</ThemedText>
           {drum.tips.map((tip, i) => (
@@ -62,6 +57,8 @@ export default function DrumDetailScreen() {
             </View>
           ))}
         </View>
+
+        <LugTuning drum={drum} />
       </ScrollView>
     </>
   );
